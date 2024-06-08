@@ -20,6 +20,11 @@ const config = {
     },
     extend: {
       colors: {
+        primary_main: 'hsl(var(--primary-main))',
+        secondary_main: 'hsl(var(--secondary-main))',
+        app_primary_gray: 'hsl(var(--app-primary-gray))',
+        app_secondary_gray: 'hsl(var(--app-secondary-gray))',
+        primary_blue: 'hsl(var(--primary-blue))',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
@@ -75,7 +80,10 @@ const config = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate'), require('flowbite/plugin')],
+  plugins: [
+    require('tailwindcss-animate'),
+    require('flowbite/plugin'),
+  ],
 } satisfies Config;
 
 export default config;
