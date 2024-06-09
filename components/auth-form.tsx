@@ -12,6 +12,10 @@ import Link from 'next/link';
 import { AuthHeader } from './auth-header';
 import { Logo } from './logo';
 import { authFormSchema } from '@/lib/schemas';
+import { login, register } from '@/actions/auth.actions';
+
+import { LoaderCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export const AuthForm = ({
   type,
@@ -19,6 +23,7 @@ export const AuthForm = ({
   type: 'login' | 'register';
 }) => {
   const formSchema = authFormSchema(type);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -29,18 +34,22 @@ export const AuthForm = ({
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     if (type === 'login') {
-      console.log(values);
+      const response = await login(values);
+      if (response) router.push('/');
     }
 
     if (type === 'register') {
-      console.log(values);
+      const response = await register(values);
+      if (response) router.push('/');
     }
   }
 
+  const { isSubmitting, isDirty } = form.formState;
+
   return (
-    <div className='flex flex-col w-full min-h-screen justify-center max-w-sm space-y-8'>
+    <div className='flex flex-col w-full min-h-screen justify-center max-w-sm space-y-6'>
       <div className='lg:hidden'>
         <Logo width={180} />
       </div>
@@ -48,7 +57,7 @@ export const AuthForm = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-8'
+          className='space-y-6'
         >
           {type === 'register' && (
             <CustomFormField
@@ -72,8 +81,14 @@ export const AuthForm = ({
             className='auth-btn'
             size={'sm'}
             type='submit'
+            disabled={!isDirty || isSubmitting}
           >
-            Submit
+            <div className='flex flex-row items-center justify-center'>
+              {isSubmitting && (
+                <LoaderCircle className='h-4 w-4 mr-2 animate-spin' />
+              )}
+              <span>{isSubmitting ? 'Loading...' : 'Submit'}</span>
+            </div>
           </Button>
         </form>
       </Form>

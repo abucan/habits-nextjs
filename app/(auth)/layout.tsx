@@ -2,12 +2,17 @@ import intro from '@/public/intro.png';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Logo } from '@/components/logo';
+import { getLoggedInUser } from '@/actions/auth.actions';
+import { redirect } from 'next/navigation';
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const user = await getLoggedInUser();
+  // if (user) redirect('/');
+
   return (
     <section className='w-full max-h-screen flex'>
       <div className='relative hidden items-center justify-center max-h-screen lg:flex flex-1'>

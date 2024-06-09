@@ -1,6 +1,6 @@
 import { AuthForm } from '@/components/auth-form';
 
-const Register = () => {
+const Register = async () => {
   return <AuthForm type='register' />;
 };
 

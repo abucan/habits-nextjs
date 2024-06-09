@@ -10,3 +10,14 @@ declare interface AuthHeaderProps {
   title?: string;
   description?: string;
 }
+
+declare interface RegisterProps {
+  username?: string;
+  email: string;
+  password: string;
+}
+
+declare interface LoginProps {
+  email: string;
+  password: string;
+}
