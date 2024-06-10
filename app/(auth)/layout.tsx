@@ -10,8 +10,8 @@ export default async function AuthLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const user = await getLoggedInUser();
-  // if (user) redirect('/');
+  const user = await getLoggedInUser();
+  if (user) redirect('/');
 
   return (
     <section className='w-full max-h-screen flex'>
@@ -28,8 +28,8 @@ export default async function AuthLayout({
               Start tracking your habits today.
             </h3>
             <p className='text-gray-300'>
-              Create an account and get access to all features, no
-              credit card required.
+              Create an account and get access to all features, no credit card
+              required.
             </p>
             <Link href='/' className='link-btn self-start'>
               Visit Home

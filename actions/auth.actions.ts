@@ -1,9 +1,6 @@
 'use server';
 
-import {
-  createAdminClient,
-  createSessionClient,
-} from '@/appwrite/appwrite';
+import { createAdminClient, createSessionClient } from '@/appwrite/appwrite';
 import { parseStringify } from '@/lib/utils';
 import { cookies } from 'next/headers';
 import { ID } from 'node-appwrite';
@@ -14,7 +11,7 @@ export const login = async (values: LoginProps) => {
 
     const user = await account.createEmailPasswordSession(
       values.email,
-      values.password,
+      values.password
     );
 
     return parseStringify(user);
@@ -32,11 +29,11 @@ export const register = async (values: RegisterProps) => {
       ID.unique(),
       values.email,
       values.password,
-      values.username,
+      values.username
     );
     const session = await account.createEmailPasswordSession(
       values.email,
-      values.password,
+      values.password
     );
 
     cookies().set('appwrite-session', session.secret, {
@@ -65,7 +62,13 @@ export async function getLoggedInUser() {
 
 export async function logout() {
   try {
-    const { account } = await createSessionClient();
+    const sessionClient = await createSessionClient();
+
+    if (!sessionClient) {
+      return null;
+    }
+
+    const { account } = sessionClient;
     cookies().delete('appwrite-session');
 
     await account.deleteSession('current');
