@@ -11,7 +11,7 @@ const Home = async () => {
   return (
     <div>
       <h1>Welcome {user.name}</h1>
-      {/* <Logout /> */}
+      <Logout />
     </div>
   );
 };

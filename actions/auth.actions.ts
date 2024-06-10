@@ -23,7 +23,6 @@ export const login = async (values: LoginProps) => {
 
     return parseStringify(user);
   } catch (error) {
-    console.error(error);
     return null;
   }
 };
@@ -52,7 +51,6 @@ export const register = async (values: RegisterProps) => {
 
     return parseStringify(user);
   } catch (error) {
-    console.error(error);
     return null;
   }
 };
