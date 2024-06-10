@@ -14,6 +14,13 @@ export const login = async (values: LoginProps) => {
       values.password
     );
 
+    cookies().set('appwrite-session', user.secret, {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: true,
+    });
+
     return parseStringify(user);
   } catch (error) {
     console.error(error);
@@ -69,8 +76,8 @@ export async function logout() {
     }
 
     const { account } = sessionClient;
-    cookies().delete('appwrite-session');
 
+    cookies().delete('appwrite-session');
     await account.deleteSession('current');
   } catch (error) {
     return null;

@@ -17,11 +17,7 @@ import { login, register } from '@/actions/auth.actions';
 import { LoaderCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-export const AuthForm = ({
-  type,
-}: {
-  type: 'login' | 'register';
-}) => {
+export const AuthForm = ({ type }: { type: 'login' | 'register' }) => {
   const formSchema = authFormSchema(type);
   const router = useRouter();
 
@@ -55,10 +51,7 @@ export const AuthForm = ({
       </div>
       <AuthHeader type={type} />
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-6'
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           {type === 'register' && (
             <CustomFormField
               name='username'
