@@ -6,6 +6,7 @@ import {
   FormLabel,
   FormMessage,
 } from './ui/form';
+import { CustomFormFieldProps } from '@/types';
 
 export const CustomFormField = ({
   name,

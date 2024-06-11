@@ -1,26 +1,47 @@
 'use client';
-
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { routes } from '@/lib/routes';
 import { SidebarItem } from './sidebar-item';
-import { SidebarCTA } from './sidebar-cta';
+import { Logo } from './logo';
 
 export const Sidebar = () => {
   return (
-    <>
-      <aside
-        id='logo-sidebar'
-        className='fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700'
-        aria-label='Sidebar'
-      >
-        <div className='h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800'>
-          <ul className='space-y-2 font-medium'>
+    <div className='hidden border-r bg-muted/40 md:block'>
+      <div className='flex h-full max-h-screen flex-col gap-2'>
+        <div className='flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6'>
+          <Logo width={100} />
+        </div>
+        <div className='flex-1 mt-2'>
+          <nav className='grid items-start px-2 text-sm font-medium lg:px-4 gap-1'>
             {routes.map((item) => {
               return <SidebarItem key={item.id} {...item} />;
             })}
-          </ul>
-          <SidebarCTA />
+          </nav>
         </div>
-      </aside>
-    </>
+        <div className='mt-auto p-4'>
+          <Card x-chunk='dashboard-02-chunk-0'>
+            <CardHeader className='p-2 pt-0 md:p-4'>
+              <CardTitle>Upgrade to Pro</CardTitle>
+              <CardDescription>
+                Unlock all features and get unlimited access to our support
+                team.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className='p-2 pt-0 md:p-4 md:pt-0'>
+              <Button size='sm' className='w-full'>
+                Upgrade
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 };

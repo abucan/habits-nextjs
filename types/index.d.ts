@@ -1,3 +1,5 @@
+import { LucideIcon } from 'lucide-react';
+
 declare interface CustomFormFieldProps {
   name: string;
   label: string;
