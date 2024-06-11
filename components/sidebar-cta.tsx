@@ -21,14 +21,14 @@ export const SidebarCTA = () => {
         </button>
       </div>
       <p className='mb-3 text-sm text-blue-800 dark:text-blue-400'>
-        Preview the new Flowbite dashboard navigation! You can turn
-        the new navigation off for a limited time in your profile.
+        Your feedback is crucial! Join our beta program and help us create the
+        best habit tracking experience.
       </p>
       <a
         className='text-sm text-blue-800 underline font-medium hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300'
         href='#'
       >
-        Turn new navigation off
+        Shape the Future
       </a>
     </div>
   );

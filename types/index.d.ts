@@ -1,5 +1,3 @@
-import { LucideIcon } from 'lucide-react';
-
 declare interface CustomFormFieldProps {
   name: string;
   label: string;
@@ -25,8 +23,9 @@ declare interface LoginProps {
 }
 
 declare interface SidebarItemProps {
-  icon: LucideIcon;
+  icon: IconType;
   label: string;
   href: string;
   isPro?: boolean;
+  isDisabled?: boolean;
 }

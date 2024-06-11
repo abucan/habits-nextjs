@@ -1,36 +1,42 @@
 import {
-  ArchiveIcon,
-  Clock1Icon,
-  LayoutDashboard,
-  PieChartIcon,
-  Settings2Icon,
-} from 'lucide-react';
+  HiOutlineViewGrid,
+  HiOutlineChartPie,
+  HiOutlineSpeakerphone,
+  HiAdjustments,
+  HiBookmark,
+} from 'react-icons/hi';
 
 export const routes = [
   {
     href: '/',
     label: 'Home',
-    icon: LayoutDashboard,
+    icon: HiOutlineViewGrid,
+    id: 1,
   },
   {
     href: '/stats',
     label: 'Stats',
-    icon: PieChartIcon,
+    icon: HiOutlineChartPie,
+    id: 2,
   },
   {
     href: '/alerts',
     label: 'Alerts',
-    icon: Clock1Icon,
+    icon: HiOutlineSpeakerphone,
     isPro: true,
+    isDisabled: true,
+    id: 3,
   },
   {
     href: '/settings',
     label: 'Settings',
-    icon: Settings2Icon,
+    icon: HiAdjustments,
+    id: 4,
   },
   {
     href: '/archived',
     label: 'Archived',
-    icon: ArchiveIcon,
+    icon: HiBookmark,
+    id: 5,
   },
 ];

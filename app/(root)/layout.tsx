@@ -1,6 +1,5 @@
-// import { getLoggedInUser } from '@/actions/auth.actions';
-// import { redirect } from 'next/navigation';
-import { SidebarMX } from '@/components/sidebar';
+import { Navbar } from '@/components/navbar';
+import { Sidebar } from '@/components/sidebar';
 
 export default async function HomeLayout({
   children,
@@ -8,8 +7,10 @@ export default async function HomeLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <section className='w-full max-h-screen flex'>
-      <SidebarMX />
+    <section className='flex h-screen w-full'>
+      <Navbar />
+      <Sidebar />
+      <div className='p-4 sm:ml-64 mt-14'>{children}</div>
     </section>
   );
 }

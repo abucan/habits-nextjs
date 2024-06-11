@@ -5,7 +5,7 @@ const Home = async () => {
   const user = await getLoggedInUser();
   if (!user) redirect('/login');
 
-  return <div>Home</div>;
+  return <div className='text-red-500'>Home</div>;
 };
 
 export default Home;
