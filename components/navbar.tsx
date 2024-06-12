@@ -1,5 +1,6 @@
 import { Logo } from './logo';
 import { MobileSidebar } from './mobile-sidebar';
+import { ModeToggle } from './mode-toggle';
 import { UserButton } from './user-button';
 
 export const Navbar = () => {
@@ -11,7 +12,10 @@ export const Navbar = () => {
           <Logo width={104} />
         </div>
       </div>
-      <UserButton />
+      <div className='flex gap-2'>
+        <ModeToggle />
+        <UserButton />
+      </div>
     </header>
   );
 };

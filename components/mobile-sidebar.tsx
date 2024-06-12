@@ -1,18 +1,11 @@
 'use client';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { routes } from '@/lib/routes';
 import { MobileSidebarItem } from './mobile-sidebar-item';
 import { Logo } from './logo';
+import { SidebarCTA } from './sidebar-cta';
 
 export const MobileSidebar = () => {
   return (
@@ -33,20 +26,7 @@ export const MobileSidebar = () => {
           })}
         </nav>
         <div className='mt-auto'>
-          <Card>
-            <CardHeader>
-              <CardTitle>Upgrade to Pro</CardTitle>
-              <CardDescription>
-                Unlock all features and get unlimited access to our support
-                team.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button size='sm' className='w-full'>
-                Upgrade
-              </Button>
-            </CardContent>
-          </Card>
+          <SidebarCTA />
         </div>
       </SheetContent>
     </Sheet>

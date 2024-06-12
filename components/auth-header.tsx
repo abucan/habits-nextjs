@@ -1,3 +1,5 @@
+import { AuthHeaderProps } from '@/types';
+
 export const AuthHeader = ({ type }: AuthHeaderProps) => {
   return (
     <header>
