@@ -5,6 +5,8 @@ declare interface CustomFormFieldProps {
   label: string;
   placeholder?: string;
   description?: string;
+  isTextArea?: boolean;
+  list?: string[];
 }
 
 declare interface AuthHeaderProps {

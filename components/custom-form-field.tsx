@@ -7,11 +7,13 @@ import {
   FormMessage,
 } from './ui/form';
 import { CustomFormFieldProps } from '@/types';
+import { Textarea } from './ui/textarea';
 
 export const CustomFormField = ({
   name,
   label,
   placeholder,
+  isTextArea,
 }: CustomFormFieldProps) => {
   const { control } = useFormContext();
   return (
@@ -19,16 +21,24 @@ export const CustomFormField = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className='w-full'>
           <FormLabel>{label}</FormLabel>
           <div className='flex flex-col w-full'>
             <FormControl>
-              <input
-                className='text-input'
-                placeholder={placeholder}
-                {...field}
-                type={name === 'password' ? 'password' : 'text'}
-              />
+              {!isTextArea ? (
+                <input
+                  className='text-input'
+                  placeholder={placeholder}
+                  {...field}
+                  type={name === 'password' ? 'password' : 'text'}
+                />
+              ) : (
+                <Textarea
+                  placeholder={placeholder}
+                  className='resize-none'
+                  {...field}
+                />
+              )}
             </FormControl>
           </div>
           <FormMessage />
