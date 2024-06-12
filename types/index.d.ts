@@ -31,3 +31,14 @@ declare interface SidebarItemProps {
   isPro?: boolean;
   isDisabled?: boolean;
 }
+
+declare interface User {
+  $id: string;
+  email: string;
+  userId: string;
+  name: string;
+}
+
+declare interface UserButtonProps {
+  user: User;
+}

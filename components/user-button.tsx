@@ -1,3 +1,4 @@
+'use client';
 import { CircleUser } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,8 +9,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { logout } from '@/actions/auth.actions';
+import { useRouter } from 'next/navigation';
+import { UserButtonProps } from '@/types';
 
-export const UserButton = () => {
+export const UserButton = ({ user }: UserButtonProps) => {
+  const router = useRouter();
+  const logoutUser = async () => {
+    const response = await logout();
+    if (response) {
+      router.push('/login');
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -19,11 +31,11 @@ export const UserButton = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={logoutUser}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

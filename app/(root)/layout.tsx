@@ -3,6 +3,7 @@ import { Navbar } from '@/components/navbar';
 import { getLoggedInUser } from '@/actions/auth.actions';
 import { redirect } from 'next/navigation';
 import { ThemeProvider } from '@/components/theme-provider';
+import { RightSidebar } from '@/components/right-sidebar';
 
 export default async function HomeLayout({
   children,
@@ -19,7 +20,7 @@ export default async function HomeLayout({
       enableSystem
       disableTransitionOnChange
     >
-      <div className='grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]'>
+      <div className='grid min-h-screen w-full md:grid-cols-[220px_1fr_220px] lg:grid-cols-[280px_1fr_280px]'>
         <Sidebar />
         <div className='flex flex-col'>
           <Navbar />
@@ -27,6 +28,7 @@ export default async function HomeLayout({
             <div>{children}</div>
           </main>
         </div>
+        <RightSidebar />
       </div>
     </ThemeProvider>
   );

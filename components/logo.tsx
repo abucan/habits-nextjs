@@ -5,11 +5,22 @@ import Image from 'next/image';
 export const Logo = ({
   width = 128,
   footer = false,
+  isDark = false,
 }: {
   width?: number;
   footer?: boolean;
   isDark?: boolean;
 }) => {
+  if (isDark)
+    return (
+      <Image
+        src={dark_logo}
+        className={`${footer ? 'mx-auto' : ''}`}
+        width={width}
+        alt='Daily Dark Logo'
+      />
+    );
+
   return (
     <>
       <Image
