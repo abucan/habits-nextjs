@@ -11,51 +11,36 @@ import { LoaderCircle } from 'lucide-react';
 import { CustomIconSelect } from './icon-select';
 import { CustomSelect } from './select-input';
 import { Button } from './ui/button';
-import { AuthHeader } from './auth-header';
+import { createHabit } from '@/actions/habits.actions';
+import { habitSchema } from '@/lib/schemas';
+import { HabitFormProps } from '@/types';
 
-/* 
-  name - input
-  icon - select
-  description - input
-  list - morning, afternoon, evening - select
-  frequency - daily, weekly, monthly - select
-
-  goal - number of times - number input
-  unit - times, minutes, hours - select
-  
-*/
-
-export const HabitForm = () => {
-  const formSchema = z.object({
-    habitName: z.string().min(3, { message: 'Name is too short' }),
-    habitIcon: z.string().min(1),
-    habitDescription: z
-      .string()
-      .min(3, { message: 'Description is too short' })
-      .max(60, { message: 'Description is too long' }),
-    habitList: z.string().min(1),
-    habitFrequency: z.string().min(1),
-    habitGoal: z.number().min(1),
-    habitUnit: z.string().min(1),
-  });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+export const HabitForm = ({ setIsOpen }: HabitFormProps) => {
+  const form = useForm<z.infer<typeof habitSchema>>({
+    resolver: zodResolver(habitSchema),
     defaultValues: {
-      habitName: 'Take a walk',
       habitDescription: 'Take a walk for 30 minutes',
       habitIcon: 'cap',
       habitList: 'Morning',
       habitFrequency: 'Daily',
       habitUnit: 'Minutes',
+      habitGoal: 30,
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof habitSchema>) {
+    try {
+      const response = await createHabit(values);
+
+      if (response) {
+        setIsOpen(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  const { isSubmitting, isDirty } = form.formState;
+  const { isSubmitting, isDirty, isValid } = form.formState;
 
   return (
     <div className='flex flex-col w-full min-h-screen justify-start max-w-sm space-y-6 mt-6'>
@@ -112,7 +97,7 @@ export const HabitForm = () => {
             className='auth-btn w-full'
             size={'default'}
             type='submit'
-            disabled={!isDirty || isSubmitting}
+            disabled={!isDirty || isSubmitting || !isValid}
           >
             <div className='flex flex-row items-center justify-center'>
               {isSubmitting && (

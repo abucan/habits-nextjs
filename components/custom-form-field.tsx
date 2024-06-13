@@ -30,7 +30,13 @@ export const CustomFormField = ({
                   className='text-input'
                   placeholder={placeholder}
                   {...field}
-                  type={name === 'password' ? 'password' : 'text'}
+                  type={
+                    name === 'password'
+                      ? 'password'
+                      : 'text' && name === 'habitGoal'
+                      ? 'number'
+                      : 'text'
+                  }
                 />
               ) : (
                 <Textarea

@@ -47,12 +47,19 @@ export const CustomIconSelect = ({
                 onValueChange={field.onChange}
                 defaultValue={field.value}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder='Select a icon' />
+                <SelectTrigger className='text-2xl'>
+                  <SelectValue
+                    placeholder='Select a icon'
+                    className='text-3xl'
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {icons.map(({ iconName, icon }) => (
-                    <SelectItem key={iconName} value={iconName}>
+                    <SelectItem
+                      key={iconName}
+                      value={iconName}
+                      className='text-xl'
+                    >
                       {icon}
                     </SelectItem>
                   ))}

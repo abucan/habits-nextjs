@@ -44,3 +44,22 @@ declare interface User {
 declare interface UserButtonProps {
   user: User;
 }
+
+declare interface CreateHabitProps {
+  $id?: string;
+  userId?: string;
+  habitName: string;
+  habitDescription: string;
+  habitIcon: string;
+  habitList: string;
+  habitFrequency: string;
+  habitGoal: number;
+  habitUnit: string;
+  $createdAt?: Date;
+  $updatedAt?: Date;
+}
+
+declare interface HabitFormProps {
+  isOpen?: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}
