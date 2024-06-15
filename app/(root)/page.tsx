@@ -1,10 +1,15 @@
+import { getHabits } from '@/actions/habits.actions';
 import { ActivityLog } from '@/components/activity-log';
+import { HabitItem } from '@/components/habit-item';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { HabitProps } from '@/types';
 import { Avatar } from 'flowbite-react';
 import { HiClipboardCheck } from 'react-icons/hi';
 
 const Home = async () => {
+  const habits = await getHabits();
+  console.log(habits);
   return (
     <div className='flex items-start justify-between'>
       <div className='flex flex-col gap-8 items-start justify-center'>
@@ -19,6 +24,10 @@ const Home = async () => {
         <p className='text-muted-foreground uppercase text-2xl font-thin'>
           Your Habits
         </p>
+        {habits?.total > 0 &&
+          habits?.documents?.map((habit: HabitProps) => {
+            return <HabitItem key={habit.$id} {...habit} />;
+          })}
       </div>
       <div className='flex flex-col-reverse gap-4'>
         <Card className='bg-gray-50 shadow-none w-[340px]'>

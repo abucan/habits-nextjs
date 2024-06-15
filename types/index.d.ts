@@ -45,7 +45,7 @@ declare interface UserButtonProps {
   user: User;
 }
 
-declare interface CreateHabitProps {
+declare interface HabitProps {
   $id?: string;
   userId?: string;
   habitName: string;
