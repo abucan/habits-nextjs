@@ -5,6 +5,15 @@ const radius = (size - strokeWidth) / 2;
 const circumference = 2 * Math.PI * radius;
 const offset = circumference - (progress / 100) * circumference;
 
+/*
+ * get the habit Goal
+ * onClick increment by 1
+ * if goal is reached change count to Yes icon
+ * when the goal is reached log the record
+ *
+ *
+ */
+
 export const CircleProgressBar = () => {
   return (
     <div className='relative flex items-center justify-center'>

@@ -18,7 +18,13 @@ export const HabitItem = (habit: HabitProps) => {
           <div className='rounded-full bg-gray-200 p-2 grid place-items-center'>
             <LucideBike />
           </div>
-          <p className='font-medium'>{habit.habitName}</p>
+          <div>
+            <p className='font-medium'>{habit.habitName}</p>
+            <p className='font-light text-[14px]'>
+              Goal: {habit.habitGoal}{' '}
+              <span className='lowercase'>{habit.habitUnit}</span>
+            </p>
+          </div>
         </div>
         <CircleProgressBar />
       </div>
