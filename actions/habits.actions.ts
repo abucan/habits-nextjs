@@ -46,6 +46,9 @@ export const getHabits = async () => {
       HABITS_ID!,
       [Query.equal('userId', user.$id)],
     );
+    console.log(
+      parseStringify(habits.documents.map((doc) => doc.logs)),
+    );
 
     return parseStringify(habits);
   } catch (error) {

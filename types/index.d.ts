@@ -57,6 +57,17 @@ declare interface HabitProps {
   habitUnit: string;
   $createdAt?: Date;
   $updatedAt?: Date;
+  logs?: Log[];
+}
+
+declare interface Log {
+  $id?: string;
+  isCompleted: boolean;
+  habitGoal: number;
+  habitCurrentCount: number;
+  date: Date;
+  $createdAt?: Date;
+  $updatedAt?: Date;
 }
 
 declare interface HabitFormProps {
