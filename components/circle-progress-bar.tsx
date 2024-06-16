@@ -1,9 +1,7 @@
-const progress = 60;
-const strokeWidth = 10;
-const size = 50;
-const radius = (size - strokeWidth) / 2;
-const circumference = 2 * Math.PI * radius;
-const offset = circumference - (progress / 100) * circumference;
+'use client';
+
+import { CircleProgressBarProps } from '@/types';
+import { useState } from 'react';
 
 /*
  * get the habit Goal
@@ -14,9 +12,29 @@ const offset = circumference - (progress / 100) * circumference;
  *
  */
 
-export const CircleProgressBar = () => {
+export const CircleProgressBar = ({
+  count,
+}: CircleProgressBarProps) => {
+  const [progress, setProgress] = useState(0);
+
+  const strokeWidth = 10;
+  const size = 50;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (progress / count) * circumference;
+
+  const handleProgress = () => {
+    if (progress === count) {
+      return;
+    } else {
+      setProgress(progress + 1);
+    }
+  };
   return (
-    <div className='relative flex items-center justify-center'>
+    <div
+      className='relative flex items-center justify-center cursor-pointer'
+      onClick={handleProgress}
+    >
       <svg
         width={size}
         height={size}
@@ -42,7 +60,7 @@ export const CircleProgressBar = () => {
           className='transition-all duration-300'
         />
       </svg>
-      <div className='absolute text-xs font-semibold'>0</div>
+      <div className='absolute text-xs font-semibold'>{progress}</div>
     </div>
   );
 };

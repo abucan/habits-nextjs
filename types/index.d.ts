@@ -63,3 +63,7 @@ declare interface HabitFormProps {
   isOpen?: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
+
+declare interface CircleProgressBarProps {
+  count: number;
+}

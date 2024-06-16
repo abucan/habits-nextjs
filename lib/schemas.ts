@@ -21,6 +21,6 @@ export const habitSchema = z.object({
   habitFrequency: z
     .enum(['Daily', 'Weekly', 'Monthly'])
     .default('Daily'),
-  habitGoal: z.number().min(1).default(1),
+  habitGoal: z.number().min(1).max(100),
   habitUnit: z.string().min(1),
 });

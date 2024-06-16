@@ -7,8 +7,6 @@ import {
   FormMessage,
 } from './ui/form';
 import { CustomFormFieldProps } from '@/types';
-import { HiAcademicCap } from 'react-icons/hi';
-import { HiCalculator } from 'react-icons/hi';
 import {
   Select,
   SelectContent,
@@ -16,17 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
-
-const icons = [
-  {
-    iconName: 'cap',
-    icon: <HiAcademicCap />,
-  },
-  {
-    iconName: 'cap-2',
-    icon: <HiCalculator />,
-  },
-];
+import { icons } from '@/lib/icons';
 
 export const CustomIconSelect = ({
   name,
@@ -54,15 +42,18 @@ export const CustomIconSelect = ({
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  {icons.map(({ iconName, icon }) => (
-                    <SelectItem
-                      key={iconName}
-                      value={iconName}
-                      className='text-xl'
-                    >
-                      {icon}
-                    </SelectItem>
-                  ))}
+                  {icons.map(({ iconName, icon }) => {
+                    const Icon = icon;
+                    return (
+                      <SelectItem
+                        key={iconName}
+                        value={iconName}
+                        className='text-xl'
+                      >
+                        <Icon />
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </FormControl>

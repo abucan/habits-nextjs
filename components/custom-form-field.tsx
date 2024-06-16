@@ -30,6 +30,13 @@ export const CustomFormField = ({
                   className='text-input'
                   placeholder={placeholder}
                   {...field}
+                  onChange={(e) => {
+                    field.onChange(
+                      name === 'habitGoal'
+                        ? parseInt(e.target.value, 10) || ''
+                        : e.target.value,
+                    );
+                  }}
                   type={
                     name === 'password'
                       ? 'password'

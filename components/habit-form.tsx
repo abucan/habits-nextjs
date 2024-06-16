@@ -24,8 +24,9 @@ export const HabitForm = ({ setIsOpen }: HabitFormProps) => {
       habitList: 'Morning',
       habitFrequency: 'Daily',
       habitUnit: 'Minutes',
-      habitGoal: 30,
+      habitGoal: 10,
     },
+    mode: 'onChange',
   });
 
   async function onSubmit(values: z.infer<typeof habitSchema>) {

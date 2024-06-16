@@ -1,22 +1,17 @@
-import { LucideBike } from 'lucide-react';
 import { Card } from './ui/card';
 import { CircleProgressBar } from './circle-progress-bar';
 import { HabitProps } from '@/types';
+import { getIcon } from '@/lib/utils';
 
 export const HabitItem = (habit: HabitProps) => {
-  const progress = 60;
-  const strokeWidth = 10;
-  const size = 100;
-  const radius = (size - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (progress / 100) * circumference;
+  const icon = getIcon(habit.habitIcon);
 
   return (
     <Card className='w-[400px] max-w-md'>
       <div className='w-full p-4 flex flex-row items-center justify-between'>
         <div className='flex flex-row items-center gap-4'>
           <div className='rounded-full bg-gray-200 p-2 grid place-items-center'>
-            <LucideBike />
+            {icon && icon({ className: 'h-6 w-6' })}
           </div>
           <div>
             <p className='font-medium'>{habit.habitName}</p>
@@ -26,7 +21,7 @@ export const HabitItem = (habit: HabitProps) => {
             </p>
           </div>
         </div>
-        <CircleProgressBar />
+        <CircleProgressBar count={habit.habitGoal} />
       </div>
     </Card>
   );
