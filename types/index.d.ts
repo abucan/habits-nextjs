@@ -1,4 +1,5 @@
 import { LucideIcon } from 'lucide-react';
+import { Models } from 'node-appwrite';
 
 declare interface CustomFormFieldProps {
   name: string;
@@ -57,7 +58,7 @@ declare interface HabitProps {
   habitUnit: string;
   $createdAt?: Date;
   $updatedAt?: Date;
-  logs?: Log[];
+  logs: Log[] | [];
 }
 
 declare interface Log {
@@ -77,4 +78,9 @@ declare interface HabitFormProps {
 
 declare interface CircleProgressBarProps {
   count: number;
+  habitCurrentCount: number;
+}
+
+declare interface HabitsContainerProps {
+  habits: Models.Document;
 }

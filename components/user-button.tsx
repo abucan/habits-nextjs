@@ -25,17 +25,23 @@ export const UserButton = ({ user }: UserButtonProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='outline' size='icon' className='rounded-full'>
+        <Button
+          variant='outline'
+          size='icon'
+          className='rounded-full'
+        >
           <CircleUser className='h-5 w-5' />
           <span className='sr-only'>Toggle user menu</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
-        <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+        <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logoutUser}>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={logoutUser}>
+          Logout
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

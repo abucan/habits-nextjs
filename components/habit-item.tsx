@@ -3,11 +3,19 @@ import { CircleProgressBar } from './circle-progress-bar';
 import { HabitProps } from '@/types';
 import { getIcon } from '@/lib/utils';
 
-export const HabitItem = (habit: HabitProps) => {
+interface HabitItemProps {
+  habit: HabitProps;
+}
+
+export const HabitItem = ({ habit }: any) => {
   const icon = getIcon(habit.habitIcon);
 
+  const habitCurrentCount = habit.logs
+    ? habit.logs.habitCurrentCount
+    : 0;
+
   return (
-    <Card className='w-[400px] max-w-md'>
+    <Card className='w-full max-w-md'>
       <div className='w-full p-4 flex flex-row items-center justify-between'>
         <div className='flex flex-row items-center gap-4'>
           <div className='rounded-full bg-gray-200 p-2 grid place-items-center'>
@@ -21,7 +29,10 @@ export const HabitItem = (habit: HabitProps) => {
             </p>
           </div>
         </div>
-        <CircleProgressBar count={habit.habitGoal} />
+        <CircleProgressBar
+          count={habit.habitGoal}
+          habitCurrentCount={habitCurrentCount}
+        />
       </div>
     </Card>
   );

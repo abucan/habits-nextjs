@@ -3,20 +3,11 @@
 import { CircleProgressBarProps } from '@/types';
 import { useState } from 'react';
 
-/*
- * get the habit Goal
- * onClick increment by 1
- * if goal is reached change count to Yes icon
- * when the goal is reached log the record
- *
- *
- */
-
 export const CircleProgressBar = ({
   count,
+  habitCurrentCount,
 }: CircleProgressBarProps) => {
-  const [progress, setProgress] = useState(0);
-
+  const [progress, setProgress] = useState(habitCurrentCount);
   const strokeWidth = 10;
   const size = 50;
   const radius = (size - strokeWidth) / 2;

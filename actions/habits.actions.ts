@@ -2,7 +2,7 @@
 
 import { createAdminClient } from '@/appwrite/appwrite';
 import { parseStringify } from '@/lib/utils';
-import { HabitProps } from '@/types';
+import { HabitProps, Log } from '@/types';
 import { ID, Query } from 'node-appwrite';
 import { getLoggedInUser } from './auth.actions';
 import { revalidatePath } from 'next/cache';
@@ -46,9 +46,26 @@ export const getHabits = async () => {
       HABITS_ID!,
       [Query.equal('userId', user.$id)],
     );
-    console.log(
-      parseStringify(habits.documents.map((doc) => doc.logs)),
-    );
+
+    // const selectedDateString = selectedDate
+    //   .toISOString()
+    //   .split('T')[0];
+
+    // const habitsWithLogsForDate = habits.documents.map((habit) => {
+    //   const filteredLogs = habit.logs.filter(
+    //     (log: Log) =>
+    //       log.date.toString().split('T')[0] === selectedDateString,
+    //   );
+    //   return {
+    //     ...habit,
+    //     logs: filteredLogs,
+    //   };
+    // });
+
+    // return parseStringify({
+    //   total: habits.total,
+    //   documents: habitsWithLogsForDate,
+    // });
 
     return parseStringify(habits);
   } catch (error) {
