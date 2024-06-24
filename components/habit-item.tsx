@@ -1,18 +1,12 @@
+'use client';
 import { Card } from './ui/card';
 import { CircleProgressBar } from './circle-progress-bar';
-import { HabitProps } from '@/types';
 import { getIcon } from '@/lib/utils';
+import { useState } from 'react';
 
-interface HabitItemProps {
-  habit: HabitProps;
-}
-
-export const HabitItem = ({ habit }: any) => {
+export const HabitItem = ({ habit, count }: any) => {
   const icon = getIcon(habit.habitIcon);
-
-  const habitCurrentCount = habit.logs
-    ? habit.logs.habitCurrentCount
-    : 0;
+  const [progress, setProgress] = useState(count);
 
   return (
     <Card className='w-full max-w-md'>
@@ -29,10 +23,7 @@ export const HabitItem = ({ habit }: any) => {
             </p>
           </div>
         </div>
-        <CircleProgressBar
-          count={habit.habitGoal}
-          habitCurrentCount={habitCurrentCount}
-        />
+        <CircleProgressBar count={10} habitCurrentCount={progress} />
       </div>
     </Card>
   );

@@ -26,7 +26,7 @@ export const createHabit = async (values: HabitProps) => {
       {
         userId: user.$id,
         ...values,
-      },
+      }
     );
     revalidatePath('/');
     return parseStringify(habit);
@@ -41,31 +41,9 @@ export const getHabits = async () => {
 
     const user = await getLoggedInUser();
 
-    const habits = await database.listDocuments(
-      DATABASE_ID!,
-      HABITS_ID!,
-      [Query.equal('userId', user.$id)],
-    );
-
-    // const selectedDateString = selectedDate
-    //   .toISOString()
-    //   .split('T')[0];
-
-    // const habitsWithLogsForDate = habits.documents.map((habit) => {
-    //   const filteredLogs = habit.logs.filter(
-    //     (log: Log) =>
-    //       log.date.toString().split('T')[0] === selectedDateString,
-    //   );
-    //   return {
-    //     ...habit,
-    //     logs: filteredLogs,
-    //   };
-    // });
-
-    // return parseStringify({
-    //   total: habits.total,
-    //   documents: habitsWithLogsForDate,
-    // });
+    const habits = await database.listDocuments(DATABASE_ID!, HABITS_ID!, [
+      Query.equal('userId', user.$id),
+    ]);
 
     return parseStringify(habits);
   } catch (error) {
