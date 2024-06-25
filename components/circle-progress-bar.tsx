@@ -1,9 +1,11 @@
 'use client';
 
 import { CircleProgressBarProps } from '@/types';
+import { Check } from 'lucide-react';
 export const CircleProgressBar = ({
   count,
   habitCurrentCount,
+  onProgressIncrease,
 }: CircleProgressBarProps) => {
   const strokeWidth = 10;
   const size = 50;
@@ -12,13 +14,16 @@ export const CircleProgressBar = ({
   const offset = circumference - (habitCurrentCount / count) * circumference;
 
   return (
-    <div className='relative flex items-center justify-center cursor-pointer'>
+    <div
+      className='relative flex items-center justify-center cursor-pointer'
+      onClick={onProgressIncrease}
+    >
       <svg width={size} height={size} className='transform -rotate-90'>
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke='gray'
+          stroke='lightgray'
           strokeWidth={strokeWidth}
           fill='none'
         />
@@ -26,7 +31,7 @@ export const CircleProgressBar = ({
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke='blue'
+          stroke='green'
           strokeWidth={strokeWidth}
           fill='none'
           strokeDasharray={circumference}
@@ -34,7 +39,13 @@ export const CircleProgressBar = ({
           className='transition-all duration-300'
         />
       </svg>
-      <div className='absolute text-xs font-semibold'>{habitCurrentCount}</div>
+      <div className='absolute text-xs font-semibold'>
+        {habitCurrentCount === count ? (
+          <Check className='h-4 w-4 text-emerald-800' />
+        ) : (
+          <span>{habitCurrentCount}</span>
+        )}
+      </div>
     </div>
   );
 };

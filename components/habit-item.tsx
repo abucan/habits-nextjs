@@ -2,11 +2,27 @@
 import { Card } from './ui/card';
 import { CircleProgressBar } from './circle-progress-bar';
 import { getIcon } from '@/lib/utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { HabitItemProps } from '@/types';
+import { createOrUpdateLog } from '@/actions/logs.actions';
 
-export const HabitItem = ({ habit, count }: any) => {
+export const HabitItem = ({ habit, log, date }: HabitItemProps) => {
   const icon = getIcon(habit.habitIcon);
-  const [progress, setProgress] = useState(count);
+  const [progress, setProgress] = useState(log?.habitCurrentCount || 0);
+
+  const onProgressIncrease = async () => {
+    if (progress >= habit.habitGoal) {
+      return;
+    } else {
+      if (!habit.$id || !date) return;
+      await createOrUpdateLog({ habitId: habit.$id!, date });
+      setProgress(progress + 1);
+    }
+  };
+
+  useEffect(() => {
+    setProgress(log?.habitCurrentCount || 0);
+  }, [log?.habitCurrentCount]);
 
   return (
     <Card className='w-full max-w-md'>
@@ -23,7 +39,11 @@ export const HabitItem = ({ habit, count }: any) => {
             </p>
           </div>
         </div>
-        <CircleProgressBar count={10} habitCurrentCount={progress} />
+        <CircleProgressBar
+          count={habit.habitGoal || 0}
+          habitCurrentCount={progress}
+          onProgressIncrease={onProgressIncrease}
+        />
       </div>
     </Card>
   );

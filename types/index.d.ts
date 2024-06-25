@@ -79,8 +79,15 @@ declare interface HabitFormProps {
 declare interface CircleProgressBarProps {
   count: number;
   habitCurrentCount: number;
+  onProgressIncrease: () => void;
 }
 
 declare interface HabitsContainerProps {
   habits: Models.Document;
+}
+
+declare interface HabitItemProps {
+  habit: HabitProps;
+  log: Log;
+  date: Date | undefined;
 }

@@ -10,7 +10,6 @@ import { revalidatePath } from 'next/cache';
 const {
   NEXT_APPWRITE_DATABASE_ID: DATABASE_ID,
   NEXT_APPWRITE_HABITS_COLLECTION_ID: HABITS_ID,
-  NEXT_APPWRITE_LOGS_COLLECTION_ID,
 } = process.env;
 
 export const createHabit = async (values: HabitProps) => {
