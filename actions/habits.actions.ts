@@ -2,7 +2,7 @@
 
 import { createAdminClient } from '@/appwrite/appwrite';
 import { parseStringify } from '@/lib/utils';
-import { HabitProps, Log } from '@/types';
+import { GetHabitsResponse, HabitProps, Log } from '@/types';
 import { ID, Query } from 'node-appwrite';
 import { getLoggedInUser } from './auth.actions';
 import { revalidatePath } from 'next/cache';
@@ -25,7 +25,7 @@ export const createHabit = async (values: HabitProps) => {
       {
         userId: user.$id,
         ...values,
-      }
+      },
     );
     revalidatePath('/');
     return parseStringify(habit);
@@ -34,18 +34,28 @@ export const createHabit = async (values: HabitProps) => {
   }
 };
 
-export const getHabits = async () => {
+export const getHabits = async (): Promise<GetHabitsResponse> => {
   try {
     const { database } = await createAdminClient();
 
     const user = await getLoggedInUser();
 
-    const habits = await database.listDocuments(DATABASE_ID!, HABITS_ID!, [
-      Query.equal('userId', user.$id),
-    ]);
+    if (!user) {
+      return { error: 'You are not authorized to view this!' };
+    }
 
-    return parseStringify(habits);
+    const habits = await database.listDocuments(
+      DATABASE_ID!,
+      HABITS_ID!,
+      [Query.equal('userId', user.$id)],
+    );
+
+    if (habits.total === 0) {
+      return { error: 'You have no habits. Start by adding one!' };
+    }
+
+    return { data: habits };
   } catch (error) {
-    return null;
+    return { error: 'Something went wrong, please try again later.' };
   }
 };

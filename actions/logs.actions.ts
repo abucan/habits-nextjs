@@ -1,14 +1,9 @@
 'use server';
 
 import { createAdminClient } from '@/appwrite/appwrite';
-import {
-  formatDatabaseDate,
-  formatDate,
-  formatDateToISOString,
-  parseStringify,
-} from '@/lib/utils';
-import { HabitProps, Log } from '@/types';
-import { ID, Query } from 'node-appwrite';
+import { formatDate } from '@/lib/utils';
+import { CreateOrUpdateLogResponse, Log } from '@/types';
+import { ID } from 'node-appwrite';
 import { getLoggedInUser } from './auth.actions';
 import { revalidatePath } from 'next/cache';
 
@@ -24,39 +19,61 @@ export const createOrUpdateLog = async ({
 }: {
   habitId: string;
   date: Date;
-}) => {
+}): Promise<CreateOrUpdateLogResponse> => {
   try {
     const { database } = await createAdminClient();
     const user = await getLoggedInUser();
 
-    if (!user) return null;
+    if (!user)
+      return { error: 'You are not authorized to view this!' };
 
-    const habit = await database.getDocument(DATABASE_ID!, HABITS_ID!, habitId);
+    const habit = await database.getDocument(
+      DATABASE_ID!,
+      HABITS_ID!,
+      habitId,
+    );
 
-    if (!habit) return null;
+    if (!habit) return { error: 'Habit not found!' };
 
     const currentLog =
       habit.logs &&
       habit?.logs?.find(
-        (log: Log) => formatDate(log.date).trim() === formatDate(date).trim()
+        (log: Log) =>
+          formatDate(log.date).trim() === formatDate(date).trim(),
       );
 
     if (currentLog) {
-      await database.updateDocument(DATABASE_ID!, LOGS_ID!, currentLog.$id, {
-        isCompleted:
-          currentLog.habitCurrentCount + 1 === habit.habitGoal ? true : false,
-        habitCurrentCount: currentLog.habitCurrentCount + 1,
-      });
+      await database.updateDocument(
+        DATABASE_ID!,
+        LOGS_ID!,
+        currentLog.$id,
+        {
+          isCompleted:
+            currentLog.habitCurrentCount + 1 === habit.habitGoal
+              ? true
+              : false,
+          habitCurrentCount: currentLog.habitCurrentCount + 1,
+        },
+      );
+      revalidatePath('/');
+      return { data: 'Log updated!' };
     } else {
-      await database.createDocument(DATABASE_ID!, LOGS_ID!, ID.unique(), {
-        habitCurrentCount: 1,
-        date,
-        isCompleted: habit.habitGoal === 1 ? true : false,
-        habitGoal: habit.habitGoal,
-        habit: habit.$id,
-      });
+      await database.createDocument(
+        DATABASE_ID!,
+        LOGS_ID!,
+        ID.unique(),
+        {
+          habitCurrentCount: 1,
+          date,
+          isCompleted: habit.habitGoal === 1 ? true : false,
+          habitGoal: habit.habitGoal,
+          habit: habit.$id,
+        },
+      );
+      revalidatePath('/');
+      return { data: 'Log created!' };
     }
   } catch (error) {
-    return null;
+    return { error: 'Something went wrong, please try again later.' };
   }
 };

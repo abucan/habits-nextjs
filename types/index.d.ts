@@ -83,11 +83,22 @@ declare interface CircleProgressBarProps {
 }
 
 declare interface HabitsContainerProps {
-  habits: Models.Document;
+  data?: Models.DocumentList<Models.Document>;
+  user: Models.User<Models.Preferences>;
 }
 
 declare interface HabitItemProps {
   habit: HabitProps;
   log: Log;
   date: Date | undefined;
+}
+
+declare interface GetHabitsResponse {
+  data?: Models.DocumentList<Models.Document>;
+  error?: string;
+}
+
+declare interface CreateOrUpdateLogResponse {
+  data?: string;
+  error?: string;
 }

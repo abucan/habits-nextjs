@@ -5,17 +5,35 @@ import { getIcon } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { HabitItemProps } from '@/types';
 import { createOrUpdateLog } from '@/actions/logs.actions';
+import { useToast } from './ui/use-toast';
 
-export const HabitItem = ({ habit, log, date }: HabitItemProps) => {
+export const Habit = ({ habit, log, date }: HabitItemProps) => {
+  const { toast } = useToast();
   const icon = getIcon(habit.habitIcon);
-  const [progress, setProgress] = useState(log?.habitCurrentCount || 0);
+  const [progress, setProgress] = useState(
+    log?.habitCurrentCount || 0,
+  );
 
   const onProgressIncrease = async () => {
     if (progress >= habit.habitGoal) {
       return;
     } else {
       if (!habit.$id || !date) return;
-      await createOrUpdateLog({ habitId: habit.$id!, date });
+      const response = await createOrUpdateLog({
+        habitId: habit.$id!,
+        date,
+      });
+      if (response.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: 'There was a problem with your request.',
+        });
+      } else {
+        toast({
+          description: response.data,
+        });
+      }
       setProgress(progress + 1);
     }
   };

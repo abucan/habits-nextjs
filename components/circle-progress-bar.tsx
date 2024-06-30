@@ -11,14 +11,19 @@ export const CircleProgressBar = ({
   const size = 50;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (habitCurrentCount / count) * circumference;
+  const offset =
+    circumference - (habitCurrentCount / count) * circumference;
 
   return (
     <div
       className='relative flex items-center justify-center cursor-pointer'
       onClick={onProgressIncrease}
     >
-      <svg width={size} height={size} className='transform -rotate-90'>
+      <svg
+        width={size}
+        height={size}
+        className='transform -rotate-90'
+      >
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -41,7 +46,7 @@ export const CircleProgressBar = ({
       </svg>
       <div className='absolute text-xs font-semibold'>
         {habitCurrentCount === count ? (
-          <Check className='h-4 w-4 text-emerald-800' />
+          <Check className='h-4 w-4 text-emerald-800 font-extrabold' />
         ) : (
           <span>{habitCurrentCount}</span>
         )}
