@@ -2,28 +2,33 @@
 import { Card } from './ui/card';
 import { CircleProgressBar } from './circle-progress-bar';
 import { getIcon } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useOptimistic, useState } from 'react';
 import { HabitItemProps } from '@/types';
 import { createOrUpdateLog } from '@/actions/logs.actions';
 import { useToast } from './ui/use-toast';
 
 export const Habit = ({ habit, log, date }: HabitItemProps) => {
   const { toast } = useToast();
+
   const icon = getIcon(habit.habitIcon);
-  const [progress, setProgress] = useState(
+
+  const [optimisticProgress, setOptimisticProgress] = useOptimistic(
     log?.habitCurrentCount || 0,
+    (_, newValue: any) => newValue,
   );
 
   const onProgressIncrease = async () => {
-    if (progress >= habit.habitGoal) {
+    if (optimisticProgress >= habit.habitGoal) {
       return;
     } else {
       if (!habit.$id || !date) return;
+      setOptimisticProgress(optimisticProgress + 1);
       const response = await createOrUpdateLog({
         habitId: habit.$id!,
         date,
       });
       if (response.error) {
+        setOptimisticProgress(optimisticProgress);
         toast({
           variant: 'destructive',
           title: 'Uh oh! Something went wrong.',
@@ -34,13 +39,12 @@ export const Habit = ({ habit, log, date }: HabitItemProps) => {
           description: response.data,
         });
       }
-      setProgress(progress + 1);
     }
   };
 
   useEffect(() => {
-    setProgress(log?.habitCurrentCount || 0);
-  }, [log?.habitCurrentCount]);
+    setOptimisticProgress(log?.habitCurrentCount || 0);
+  }, [log?.habitCurrentCount, setOptimisticProgress]);
 
   return (
     <Card className='w-full max-w-md'>
@@ -59,7 +63,7 @@ export const Habit = ({ habit, log, date }: HabitItemProps) => {
         </div>
         <CircleProgressBar
           count={habit.habitGoal || 0}
-          habitCurrentCount={progress}
+          habitCurrentCount={optimisticProgress}
           onProgressIncrease={onProgressIncrease}
         />
       </div>

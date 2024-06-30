@@ -71,7 +71,7 @@ export const createOrUpdateLog = async ({
         },
       );
       revalidatePath('/');
-      return { data: 'Log created!' };
+      return { data: 'Log updated!' };
     }
   } catch (error) {
     return { error: 'Something went wrong, please try again later.' };

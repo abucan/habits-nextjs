@@ -1,7 +1,7 @@
 'use client';
 
 import { CircleProgressBarProps } from '@/types';
-import { Check } from 'lucide-react';
+import { CircleCheckBig } from 'lucide-react';
 export const CircleProgressBar = ({
   count,
   habitCurrentCount,
@@ -46,7 +46,7 @@ export const CircleProgressBar = ({
       </svg>
       <div className='absolute text-xs font-semibold'>
         {habitCurrentCount === count ? (
-          <Check className='h-4 w-4 text-emerald-800 font-extrabold' />
+          <CircleCheckBig className='h-4 w-4 text-emerald-800 font-extrabold' />
         ) : (
           <span>{habitCurrentCount}</span>
         )}
