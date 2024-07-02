@@ -1,7 +1,11 @@
 'use server';
 
 import { createAdminClient } from '@/appwrite/appwrite';
-import { formatDate, getMonthStartEnd, getWeekStartEnd } from '@/lib/utils';
+import {
+  formatDate,
+  getMonthStartEnd,
+  getWeekStartEnd,
+} from '@/lib/utils';
 import { CreateOrUpdateLogResponse, Log } from '@/types';
 import { ID } from 'node-appwrite';
 import { getLoggedInUser } from './auth.actions';
@@ -24,9 +28,14 @@ export const createOrUpdateLog = async ({
     const { database } = await createAdminClient();
     const user = await getLoggedInUser();
 
-    if (!user) return { error: 'You are not authorized to view this!' };
+    if (!user)
+      return { error: 'You are not authorized to view this!' };
 
-    const habit = await database.getDocument(DATABASE_ID!, HABITS_ID!, habitId);
+    const habit = await database.getDocument(
+      DATABASE_ID!,
+      HABITS_ID!,
+      habitId,
+    );
 
     if (!habit) return { error: 'Habit not found!' };
 
@@ -34,7 +43,8 @@ export const createOrUpdateLog = async ({
     let logCondition;
 
     if (habit?.habitFrequency === 'Daily') {
-      logCondition = (log: Log) => formatDate(log.date).trim() === dateFilter;
+      logCondition = (log: Log) =>
+        formatDate(log.date).trim() === dateFilter;
     } else if (habit?.habitFrequency === 'Weekly') {
       const { start, end } = getWeekStartEnd(date);
       logCondition = (log: Log) => {
@@ -48,7 +58,6 @@ export const createOrUpdateLog = async ({
         return logDate >= start && logDate <= end;
       };
     }
-    console.log(logCondition);
 
     const currentLog = habit.logs && habit.logs.find(logCondition);
     // const currentLog =
@@ -58,28 +67,38 @@ export const createOrUpdateLog = async ({
     //   );
 
     if (currentLog) {
-      await database.updateDocument(DATABASE_ID!, LOGS_ID!, currentLog.$id, {
-        isCompleted:
-          currentLog.habitCurrentCount + 1 === habit.habitGoal ? true : false,
-        habitCurrentCount: currentLog.habitCurrentCount + 1,
-      });
+      await database.updateDocument(
+        DATABASE_ID!,
+        LOGS_ID!,
+        currentLog.$id,
+        {
+          isCompleted:
+            currentLog.habitCurrentCount + 1 === habit.habitGoal
+              ? true
+              : false,
+          habitCurrentCount: currentLog.habitCurrentCount + 1,
+        },
+      );
       revalidatePath('/');
       return { data: 'Log updated!' };
     } else {
       console.log('Creating new log');
-
-      await database.createDocument(DATABASE_ID!, LOGS_ID!, ID.unique(), {
-        habitCurrentCount: 1,
-        date,
-        isCompleted: habit.habitGoal === 1 ? true : false,
-        habitGoal: habit.habitGoal,
-        habit: habit.$id,
-      });
+      await database.createDocument(
+        DATABASE_ID!,
+        LOGS_ID!,
+        ID.unique(),
+        {
+          habitCurrentCount: 1,
+          date,
+          isCompleted: habit.habitGoal === 1 ? true : false,
+          habitGoal: habit.habitGoal,
+          habit: habit.$id,
+        },
+      );
       revalidatePath('/');
       return { data: 'Log updated!' };
     }
   } catch (error) {
-    console.log(error);
     return { error: 'Something went wrong, please try again later.' };
   }
 };

@@ -14,7 +14,7 @@ export const Habit = ({ habit, log, date }: HabitItemProps) => {
 
   const [optimisticProgress, setOptimisticProgress] = useOptimistic(
     log?.habitCurrentCount || 0,
-    (_, newValue: any) => newValue
+    (_, newValue: any) => newValue,
   );
 
   const onProgressIncrease = async () => {
@@ -43,44 +43,66 @@ export const Habit = ({ habit, log, date }: HabitItemProps) => {
   };
 
   const renderLogs = useMemo(() => {
-    if (!date) return;
+    if (!date) return [];
     const today = date;
-    let filteredLogs = habit.logs;
+    let filteredLogs = habit?.logs || [];
+    console.log(today);
 
     if (habit.habitFrequency === 'Daily') {
       filteredLogs = habit.logs.filter(
-        (log) => new Date(log.date).toDateString() === today.toDateString()
+        (log) =>
+          new Date(log.date).toDateString() === today.toDateString(),
       );
     } else if (habit.habitFrequency === 'Weekly') {
       const weekStart = new Date(
         today.getFullYear(),
         today.getMonth(),
-        today.getDate() - today.getDay()
+        today.getDate() - today.getDay(),
       );
       const weekEnd = new Date(
         today.getFullYear(),
         today.getMonth(),
-        today.getDate() + (6 - today.getDay())
+        today.getDate() + (6 - today.getDay()),
       );
       filteredLogs = habit.logs.filter((log) => {
         const logDate = new Date(log.date);
         return logDate >= weekStart && logDate <= weekEnd;
       });
     } else if (habit.habitFrequency === 'Monthly') {
-      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-      const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      const monthStart = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        1,
+      );
+      const monthEnd = new Date(
+        today.getFullYear(),
+        today.getMonth() + 1,
+        0,
+      );
       filteredLogs = habit.logs.filter((log) => {
         const logDate = new Date(log.date);
         return logDate >= monthStart && logDate <= monthEnd;
       });
     }
+    console.log(habit.habitFrequency, filteredLogs);
+
     return filteredLogs;
   }, [habit.logs, date, habit.habitFrequency]);
-  console.log(renderLogs);
 
   useEffect(() => {
     setOptimisticProgress(log?.habitCurrentCount || 0);
   }, [log?.habitCurrentCount, setOptimisticProgress]);
+
+  const currentLog = renderLogs.length > 0 ? renderLogs[0] : null;
+  const currentProgress = currentLog
+    ? currentLog.habitCurrentCount
+    : 0;
+
+  const currentProgress1 = renderLogs.reduce(
+    (acc, log) => acc + log.habitCurrentCount,
+    0,
+  );
+  console.log('currentProgress1', currentProgress1);
 
   return (
     <Card className='w-full'>
@@ -99,7 +121,7 @@ export const Habit = ({ habit, log, date }: HabitItemProps) => {
         </div>
         <CircleProgressBar
           count={habit.habitGoal || 0}
-          habitCurrentCount={optimisticProgress}
+          habitCurrentCount={currentProgress1}
           onProgressIncrease={onProgressIncrease}
         />
       </div>
