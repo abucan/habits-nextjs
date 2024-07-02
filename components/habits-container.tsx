@@ -6,14 +6,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { formatDate } from '@/lib/utils';
 import { HomeUserWidget } from './home-user-widget';
 
-export const HabitsContainer = ({
-  data,
-  user,
-}: HabitsContainerProps) => {
+export const HabitsContainer = ({ data, user }: HabitsContainerProps) => {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [habitsWithLogs, setHabitsWithLogs] = useState<any>(
-    data?.documents,
-  );
+  const [habitsWithLogs, setHabitsWithLogs] = useState<any>(data?.documents);
 
   const changeHabits = useCallback(() => {
     if (!date) return;
@@ -22,7 +17,7 @@ export const HabitsContainer = ({
 
     const habitsWithLogsForDate = data?.documents.map((habit) => {
       const filteredLogs = habit.logs.filter(
-        (log: Log) => formatDate(log.date) === selectedDateString,
+        (log: Log) => formatDate(log.date) === selectedDateString
       );
       return {
         ...habit,
@@ -45,7 +40,7 @@ export const HabitsContainer = ({
             Your Habits
           </span>
         </div>
-        <div className='grid grid-cols-2 gap-4'>
+        <div className='grid grid-cols-2 gap-8'>
           {habitsWithLogs?.map((habit: HabitProps) => {
             return (
               <Habit
