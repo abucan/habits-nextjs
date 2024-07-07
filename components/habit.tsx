@@ -1,34 +1,43 @@
 'use client';
 import { Card } from './ui/card';
 import { CircleProgressBar } from './circle-progress-bar';
-import { getIcon } from '@/lib/utils';
-import { useEffect, useMemo, useOptimistic, useState } from 'react';
+import { formatDate, getIcon } from '@/lib/utils';
+import { useEffect, useMemo, useState } from 'react';
 import { HabitItemProps } from '@/types';
 import { createOrUpdateLog } from '@/actions/logs.actions';
 import { useToast } from './ui/use-toast';
+import { useFilteredLogs } from '@/hooks/useFilteredLogs';
+import { EditHabitSidebar } from './edit-habit-sidebar';
 
-export const Habit = ({ habit, log, date }: HabitItemProps) => {
+export const Habit = ({ item, date }: HabitItemProps) => {
   const { toast } = useToast();
 
-  const icon = getIcon(habit.habitIcon);
+  const Icon = getIcon(item.habitIcon);
 
-  const [optimisticProgress, setOptimisticProgress] = useOptimistic(
-    log?.habitCurrentCount || 0,
-    (_, newValue: any) => newValue,
+  const filteredLog = useFilteredLogs(
+    item.logs!,
+    date,
+    item.habitFrequency,
+    item.habitGoal,
   );
 
+  const [optimisticProgress, setOptimisticProgress] = useState(
+    filteredLog?.habitCurrentCount || 0,
+  );
+
+  const currentHabitGoal = filteredLog?.habitGoal || item.habitGoal;
+
   const onProgressIncrease = async () => {
-    if (optimisticProgress >= habit.habitGoal) {
+    if (optimisticProgress >= currentHabitGoal || !date || !item.$id) {
       return;
     } else {
-      if (!habit.$id || !date) return;
       setOptimisticProgress(optimisticProgress + 1);
       const response = await createOrUpdateLog({
-        habitId: habit.$id!,
+        habitId: item.$id!,
         date,
       });
       if (response.error) {
-        setOptimisticProgress(optimisticProgress);
+        setOptimisticProgress(optimisticProgress - 1);
         toast({
           variant: 'destructive',
           title: 'Uh oh! Something went wrong.',
@@ -42,87 +51,39 @@ export const Habit = ({ habit, log, date }: HabitItemProps) => {
     }
   };
 
-  const renderLogs = useMemo(() => {
-    if (!date) return [];
-    const today = date;
-    let filteredLogs = habit?.logs || [];
-    console.log(today);
-
-    if (habit.habitFrequency === 'Daily') {
-      filteredLogs = habit.logs.filter(
-        (log) =>
-          new Date(log.date).toDateString() === today.toDateString(),
-      );
-    } else if (habit.habitFrequency === 'Weekly') {
-      const weekStart = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate() - today.getDay(),
-      );
-      const weekEnd = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate() + (6 - today.getDay()),
-      );
-      filteredLogs = habit.logs.filter((log) => {
-        const logDate = new Date(log.date);
-        return logDate >= weekStart && logDate <= weekEnd;
-      });
-    } else if (habit.habitFrequency === 'Monthly') {
-      const monthStart = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        1,
-      );
-      const monthEnd = new Date(
-        today.getFullYear(),
-        today.getMonth() + 1,
-        0,
-      );
-      filteredLogs = habit.logs.filter((log) => {
-        const logDate = new Date(log.date);
-        return logDate >= monthStart && logDate <= monthEnd;
-      });
-    }
-    console.log(habit.habitFrequency, filteredLogs);
-
-    return filteredLogs;
-  }, [habit.logs, date, habit.habitFrequency]);
+  const isButtonDisabled = useMemo(
+    () => formatDate(date!) > formatDate(new Date()),
+    [date],
+  );
 
   useEffect(() => {
-    setOptimisticProgress(log?.habitCurrentCount || 0);
-  }, [log?.habitCurrentCount, setOptimisticProgress]);
+    setOptimisticProgress(filteredLog?.habitCurrentCount || 0);
+  }, [filteredLog?.habitCurrentCount]);
 
-  const currentLog = renderLogs.length > 0 ? renderLogs[0] : null;
-  const currentProgress = currentLog
-    ? currentLog.habitCurrentCount
-    : 0;
-
-  const currentProgress1 = renderLogs.reduce(
-    (acc, log) => acc + log.habitCurrentCount,
-    0,
-  );
-  console.log('currentProgress1', currentProgress1);
+  const currentProgress = filteredLog?.habitCurrentCount || 0;
 
   return (
     <Card className='w-full'>
       <div className='w-full p-4 flex flex-row items-center justify-between'>
-        <div className='flex flex-row items-center gap-4'>
-          <div className='rounded-full bg-gray-200 p-2 grid place-items-center'>
-            {icon && icon({ className: 'h-6 w-6' })}
+        <EditHabitSidebar habit={item}>
+          <div className='flex flex-row items-center gap-4'>
+            <div className='rounded-full bg-gray-200 p-2 grid place-items-center cursor-pointer'>
+              {Icon && Icon({ className: 'h-6 w-6' })}
+            </div>
+            <div>
+              <p className='font-medium'>{item.habitName}</p>
+              <p className='font-light text-[14px]'>
+                Goal: {item.habitGoal}{' '}
+                <span className='lowercase'>{item.habitUnit}</span>
+              </p>
+            </div>
           </div>
-          <div>
-            <p className='font-medium'>{habit.habitName}</p>
-            <p className='font-light text-[14px]'>
-              Goal: {habit.habitGoal}{' '}
-              <span className='lowercase'>{habit.habitUnit}</span>
-            </p>
-          </div>
-        </div>
+        </EditHabitSidebar>
         <CircleProgressBar
-          count={habit.habitGoal || 0}
-          habitCurrentCount={currentProgress1}
+          count={item.habitGoal || 0}
+          habitCurrentCount={currentProgress}
           onProgressIncrease={onProgressIncrease}
+          isButtonDisabled={isButtonDisabled || false}
         />
       </div>
     </Card>

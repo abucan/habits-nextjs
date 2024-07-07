@@ -8,6 +8,7 @@ declare interface CustomFormFieldProps {
   description?: string;
   isTextArea?: boolean;
   list?: string[];
+  isEdit?: boolean;
 }
 
 declare interface AuthHeaderProps {
@@ -52,13 +53,13 @@ declare interface HabitProps {
   habitName: string;
   habitDescription: string;
   habitIcon: string;
-  habitList: string;
-  habitFrequency: string;
+  habitList: 'Morning' | 'Afternoon' | 'Evening' | 'None';
+  habitFrequency: 'Daily' | 'Weekly' | 'Monthly';
   habitGoal: number;
   habitUnit: string;
   $createdAt?: Date;
   $updatedAt?: Date;
-  logs: Log[] | [];
+  logs?: Log[] | [];
 }
 
 declare interface Log {
@@ -74,12 +75,15 @@ declare interface Log {
 declare interface HabitFormProps {
   isOpen?: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  habit?: HabitProps;
+  isEdit?: boolean;
 }
 
 declare interface CircleProgressBarProps {
   count: number;
   habitCurrentCount: number;
   onProgressIncrease: () => void;
+  isButtonDisabled: boolean;
 }
 
 declare interface HabitsContainerProps {
@@ -88,8 +92,7 @@ declare interface HabitsContainerProps {
 }
 
 declare interface HabitItemProps {
-  habit: HabitProps;
-  log: Log;
+  item: HabitProps;
   date: Date | undefined;
 }
 
@@ -99,6 +102,16 @@ declare interface GetHabitsResponse {
 }
 
 declare interface CreateOrUpdateLogResponse {
+  data?: string;
+  error?: string;
+}
+
+declare interface DeleteHabitResponse {
+  data?: string;
+  error?: string;
+}
+
+declare interface UpdateHabitResponse {
   data?: string;
   error?: string;
 }

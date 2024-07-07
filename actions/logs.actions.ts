@@ -60,11 +60,6 @@ export const createOrUpdateLog = async ({
     }
 
     const currentLog = habit.logs && habit.logs.find(logCondition);
-    // const currentLog =
-    //   habit.logs &&
-    //   habit?.logs?.find(
-    //     (log: Log) => formatDate(log.date).trim() === formatDate(date).trim()
-    //   );
 
     if (currentLog) {
       await database.updateDocument(

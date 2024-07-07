@@ -1,11 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from './ui/form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { CustomFormFieldProps } from '@/types';
 import {
   Select,
@@ -20,6 +14,7 @@ export const CustomSelect = ({
   label,
   placeholder,
   list,
+  isEdit,
 }: CustomFormFieldProps) => {
   const { control } = useFormContext();
   return (
@@ -34,6 +29,7 @@ export const CustomSelect = ({
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
+                disabled={isEdit}
               >
                 <SelectTrigger>
                   <SelectValue placeholder={placeholder} />

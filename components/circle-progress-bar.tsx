@@ -1,11 +1,13 @@
 'use client';
-
+import { cn } from '@/lib/utils';
 import { CircleProgressBarProps } from '@/types';
-import { CircleCheckBig } from 'lucide-react';
+import { CircleCheckBig, Lock } from 'lucide-react';
+
 export const CircleProgressBar = ({
   count,
   habitCurrentCount,
   onProgressIncrease,
+  isButtonDisabled,
 }: CircleProgressBarProps) => {
   const strokeWidth = 10;
   const size = 50;
@@ -15,9 +17,13 @@ export const CircleProgressBar = ({
     circumference - (habitCurrentCount / count) * circumference;
 
   return (
-    <div
-      className='relative flex items-center justify-center cursor-pointer'
+    <button
+      className={cn(
+        'relative flex items-center justify-center',
+        isButtonDisabled ? 'cursor-default' : 'cursor-pointer',
+      )}
       onClick={onProgressIncrease}
+      disabled={isButtonDisabled}
     >
       <svg
         width={size}
@@ -47,10 +53,14 @@ export const CircleProgressBar = ({
       <div className='absolute text-xs font-semibold'>
         {habitCurrentCount === count ? (
           <CircleCheckBig className='h-4 w-4 text-emerald-800 font-extrabold' />
+        ) : isButtonDisabled ? (
+          <span>
+            <Lock className='h-4 w-4 text-emerald-800 font-extrabold' />
+          </span>
         ) : (
           <span>{habitCurrentCount}</span>
         )}
       </div>
-    </div>
+    </button>
   );
 };

@@ -11,20 +11,23 @@ import { LoaderCircle } from 'lucide-react';
 import { CustomIconSelect } from './icon-select';
 import { CustomSelect } from './select-input';
 import { Button } from './ui/button';
-import { createHabit } from '@/actions/habits.actions';
+import { createHabit, deleteHabit } from '@/actions/habits.actions';
 import { habitSchema } from '@/lib/schemas';
 import { HabitFormProps } from '@/types';
+import { useToast } from './ui/use-toast';
 
-export const HabitForm = ({ setIsOpen }: HabitFormProps) => {
+export const HabitForm = ({ setIsOpen, habit, isEdit }: HabitFormProps) => {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof habitSchema>>({
     resolver: zodResolver(habitSchema),
     defaultValues: {
-      habitDescription: 'Take a walk for 30 minutes',
-      habitIcon: 'cap',
-      habitList: 'Morning',
-      habitFrequency: 'Daily',
-      habitUnit: 'Minutes',
-      habitGoal: 10,
+      habitName: habit?.habitName || 'Take a walk',
+      habitDescription: habit?.habitDescription || 'Take a walk for 30 minutes',
+      habitIcon: habit?.habitIcon || 'cap',
+      habitList: habit?.habitList || 'Morning',
+      habitFrequency: habit?.habitFrequency || 'Daily',
+      habitUnit: habit?.habitUnit || 'Minutes',
+      habitGoal: habit?.habitGoal || 30,
     },
     mode: 'onChange',
   });
@@ -41,16 +44,33 @@ export const HabitForm = ({ setIsOpen }: HabitFormProps) => {
     }
   }
 
+  async function onDelete(habitId: string) {
+    try {
+      const response = await deleteHabit(habitId);
+      if (response.data) {
+        setIsOpen(false);
+        toast({
+          description: response.data,
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.',
+      });
+    }
+  }
+
   const { isSubmitting, isDirty, isValid } = form.formState;
 
   return (
     <div className='flex flex-col w-full min-h-screen justify-start max-w-sm space-y-6 mt-6'>
-      <h1 className='text-xl font-bold'>Add a new habit</h1>
+      <h1 className='text-xl font-bold'>
+        {isEdit ? 'Edit Habit' : 'Create a new Habit'}
+      </h1>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-6'
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           <div className='flex gap-2'>
             <CustomFormField
               name='habitName'
@@ -80,13 +100,10 @@ export const HabitForm = ({ setIsOpen }: HabitFormProps) => {
             label='Frequency'
             list={['Daily', 'Weekly', 'Monthly']}
             placeholder='Select a frequency'
+            isEdit={isEdit}
           />
           <div className='flex gap-2'>
-            <CustomFormField
-              name='habitGoal'
-              label='Goal'
-              placeholder='E.g., 8'
-            />
+            <CustomFormField name='habitGoal' label='Goal' placeholder='E.g., 8' />
             <CustomSelect
               name='habitUnit'
               label='Unit'
@@ -107,6 +124,22 @@ export const HabitForm = ({ setIsOpen }: HabitFormProps) => {
               <span>{isSubmitting ? 'Loading...' : 'Submit'}</span>
             </div>
           </Button>
+          {isEdit && habit && (
+            <Button
+              className='w-full'
+              variant={'destructive'}
+              size={'default'}
+              type='button'
+              onClick={() => onDelete(habit.$id!)}
+            >
+              <div className='flex flex-row items-center justify-center'>
+                {isSubmitting && (
+                  <LoaderCircle className='h-4 w-4 mr-2 animate-spin' />
+                )}
+                Delete
+              </div>
+            </Button>
+          )}
         </form>
       </Form>
     </div>
