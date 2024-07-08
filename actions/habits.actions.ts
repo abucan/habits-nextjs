@@ -52,12 +52,13 @@ export const updateHabit = async (
       return { error: 'You are not authorized to view this!' };
     }
 
-    await database.updateDocument(DATABASE_ID!, HABITS_ID!, values.$id!, values, [
-      Query.equal('userId', user.$id),
-    ]);
+    await database.updateDocument(DATABASE_ID!, HABITS_ID!, values.$id!, values);
+    console.log('updating');
     revalidatePath('/');
     return { data: 'Habit updated successfully!' };
   } catch (error) {
+    console.log(error);
+
     return { error: 'Something went wrong, please try again later.' };
   }
 };

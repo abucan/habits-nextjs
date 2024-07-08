@@ -29,9 +29,9 @@ export const Habit = ({ item, date }: HabitItemProps) => {
 
   const onProgressIncrease = async () => {
     if (optimisticProgress >= currentHabitGoal || !date || !item.$id) {
-      return;
+      setOptimisticProgress(item.habitGoal);
     } else {
-      setOptimisticProgress(optimisticProgress + 1);
+      setOptimisticProgress((prev) => prev + 1);
       const response = await createOrUpdateLog({
         habitId: item.$id!,
         date,

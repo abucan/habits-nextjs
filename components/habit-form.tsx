@@ -11,7 +11,7 @@ import { LoaderCircle } from 'lucide-react';
 import { CustomIconSelect } from './icon-select';
 import { CustomSelect } from './select-input';
 import { Button } from './ui/button';
-import { createHabit, deleteHabit } from '@/actions/habits.actions';
+import { createHabit, deleteHabit, updateHabit } from '@/actions/habits.actions';
 import { habitSchema } from '@/lib/schemas';
 import { HabitFormProps } from '@/types';
 import { useToast } from './ui/use-toast';
@@ -33,14 +33,42 @@ export const HabitForm = ({ setIsOpen, habit, isEdit }: HabitFormProps) => {
   });
 
   async function onSubmit(values: z.infer<typeof habitSchema>) {
+    if (isEdit) {
+      onEdit(values);
+    } else {
+      onCreate(values);
+    }
+  }
+
+  async function onCreate(values: z.infer<typeof habitSchema>) {
     try {
       const response = await createHabit(values);
-
       if (response) {
         setIsOpen(false);
+        toast({ description: response.data });
       }
     } catch (error) {
-      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.',
+      });
+    }
+  }
+
+  async function onEdit(values: z.infer<typeof habitSchema>) {
+    try {
+      const response = await updateHabit({ $id: habit?.$id, ...values });
+      if (response) {
+        setIsOpen(false);
+        toast({ description: response.data });
+      }
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.',
+      });
     }
   }
 
