@@ -73,10 +73,12 @@ export const deleteHabit = async (habitId: string): Promise<DeleteHabitResponse>
       return { error: 'You are not authorized to view this!' };
     }
 
-    await database.deleteDocument(DATABASE_ID!, HABITS_ID!, habitId);
+    await database.deleteDocument(DATABASE_ID!, HABITS_ID!, 'dsadjadsjahdas');
     revalidatePath('/');
     return { data: 'Habit deleted successfully!' };
   } catch (error) {
+    console.log(error);
+
     return { error: 'Something went wrong, please try again later.' };
   }
 };

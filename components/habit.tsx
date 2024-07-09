@@ -60,7 +60,7 @@ export const Habit = ({ item, date }: HabitItemProps) => {
     setOptimisticProgress(filteredLog?.habitCurrentCount || 0);
   }, [filteredLog?.habitCurrentCount]);
 
-  const currentProgress = filteredLog?.habitCurrentCount || 0;
+  // const currentProgress = filteredLog?.habitCurrentCount || 0;
 
   return (
     <Card className='w-full'>
@@ -81,7 +81,7 @@ export const Habit = ({ item, date }: HabitItemProps) => {
         </EditHabitSidebar>
         <CircleProgressBar
           count={item.habitGoal || 0}
-          habitCurrentCount={currentProgress}
+          habitCurrentCount={optimisticProgress}
           onProgressIncrease={onProgressIncrease}
           isButtonDisabled={isButtonDisabled || false}
         />

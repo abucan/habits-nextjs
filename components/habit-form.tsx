@@ -15,9 +15,12 @@ import { createHabit, deleteHabit, updateHabit } from '@/actions/habits.actions'
 import { habitSchema } from '@/lib/schemas';
 import { HabitFormProps } from '@/types';
 import { useToast } from './ui/use-toast';
+import { showToast } from './toast/destructive-toast';
+import { useState } from 'react';
 
 export const HabitForm = ({ setIsOpen, habit, isEdit }: HabitFormProps) => {
   const { toast } = useToast();
+  const [isDeleting, setIsDeleting] = useState(false);
   const form = useForm<z.infer<typeof habitSchema>>({
     resolver: zodResolver(habitSchema),
     defaultValues: {
@@ -64,16 +67,13 @@ export const HabitForm = ({ setIsOpen, habit, isEdit }: HabitFormProps) => {
         toast({ description: response.data });
       }
     } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'There was a problem with your request.',
-      });
+      showToast();
     }
   }
 
   async function onDelete(habitId: string) {
     try {
+      setIsDeleting(true);
       const response = await deleteHabit(habitId);
       if (response.data) {
         setIsOpen(false);
@@ -82,6 +82,9 @@ export const HabitForm = ({ setIsOpen, habit, isEdit }: HabitFormProps) => {
         });
       }
     } catch (error) {
+      console.log(error);
+      setIsDeleting(false);
+      setIsOpen(false);
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
@@ -158,10 +161,11 @@ export const HabitForm = ({ setIsOpen, habit, isEdit }: HabitFormProps) => {
               variant={'destructive'}
               size={'default'}
               type='button'
+              disabled={isSubmitting || isDeleting}
               onClick={() => onDelete(habit.$id!)}
             >
               <div className='flex flex-row items-center justify-center'>
-                {isSubmitting && (
+                {isDeleting && (
                   <LoaderCircle className='h-4 w-4 mr-2 animate-spin' />
                 )}
                 Delete
