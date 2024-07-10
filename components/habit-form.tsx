@@ -7,11 +7,16 @@ import { useForm } from 'react-hook-form';
 
 import { Form } from '@/components/ui/form';
 import { CustomFormField } from './custom-form-field';
-import { LoaderCircle } from 'lucide-react';
+import { Archive, LoaderCircle, Trash2 } from 'lucide-react';
 import { CustomIconSelect } from './icon-select';
 import { CustomSelect } from './select-input';
 import { Button } from './ui/button';
-import { createHabit, deleteHabit, updateHabit } from '@/actions/habits.actions';
+import {
+  archiveHabit,
+  createHabit,
+  deleteHabit,
+  updateHabit,
+} from '@/actions/habits.actions';
 import { habitSchema } from '@/lib/schemas';
 import { HabitFormProps } from '@/types';
 import { useToast } from './ui/use-toast';
@@ -20,7 +25,7 @@ import { useState } from 'react';
 
 export const HabitForm = ({ setIsOpen, habit, isEdit }: HabitFormProps) => {
   const { toast } = useToast();
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const form = useForm<z.infer<typeof habitSchema>>({
     resolver: zodResolver(habitSchema),
     defaultValues: {
@@ -73,7 +78,7 @@ export const HabitForm = ({ setIsOpen, habit, isEdit }: HabitFormProps) => {
 
   async function onDelete(habitId: string) {
     try {
-      setIsDeleting(true);
+      setIsProcessing(true);
       const response = await deleteHabit(habitId);
       if (response.data) {
         setIsOpen(false);
@@ -82,8 +87,6 @@ export const HabitForm = ({ setIsOpen, habit, isEdit }: HabitFormProps) => {
         });
       }
     } catch (error) {
-      console.log(error);
-      setIsDeleting(false);
       setIsOpen(false);
       toast({
         variant: 'destructive',
@@ -91,6 +94,28 @@ export const HabitForm = ({ setIsOpen, habit, isEdit }: HabitFormProps) => {
         description: 'There was a problem with your request.',
       });
     }
+    setIsProcessing(false);
+  }
+
+  async function onArchive(habitId: string) {
+    try {
+      setIsProcessing(true);
+      const response = await archiveHabit(habitId, true);
+      if (response.data) {
+        setIsOpen(false);
+        toast({
+          description: response.data,
+        });
+      }
+    } catch (error) {
+      setIsOpen(false);
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.',
+      });
+    }
+    setIsProcessing(false);
   }
 
   const { isSubmitting, isDirty, isValid } = form.formState;
@@ -156,21 +181,40 @@ export const HabitForm = ({ setIsOpen, habit, isEdit }: HabitFormProps) => {
             </div>
           </Button>
           {isEdit && habit && (
-            <Button
-              className='w-full'
-              variant={'destructive'}
-              size={'default'}
-              type='button'
-              disabled={isSubmitting || isDeleting}
-              onClick={() => onDelete(habit.$id!)}
-            >
-              <div className='flex flex-row items-center justify-center'>
-                {isDeleting && (
-                  <LoaderCircle className='h-4 w-4 mr-2 animate-spin' />
-                )}
-                Delete
-              </div>
-            </Button>
+            <div className='flex flex-row gap-2'>
+              <Button
+                className='flex-1'
+                variant={'destructive'}
+                size={'default'}
+                type='button'
+                disabled={isSubmitting || isProcessing}
+                onClick={() => onDelete(habit.$id!)}
+              >
+                <div className='flex flex-row items-center justify-center'>
+                  {isProcessing ? (
+                    <LoaderCircle className='h-4 w-4 mr-2 animate-spin' />
+                  ) : (
+                    <Trash2 className='h-4 w-4 mr-2' />
+                  )}
+                  Delete
+                </div>
+              </Button>
+              <Button
+                className='flex-1'
+                variant={'outline'}
+                disabled={isSubmitting || isProcessing}
+                onClick={() => onArchive(habit.$id!)}
+              >
+                <div className='flex flex-row items-center justify-center'>
+                  {isProcessing ? (
+                    <LoaderCircle className='h-4 w-4 mr-2 animate-spin' />
+                  ) : (
+                    <Archive className='h-4 w-4 mr-2' />
+                  )}
+                  Archive
+                </div>
+              </Button>
+            </div>
           )}
         </form>
       </Form>

@@ -13,8 +13,7 @@ export const CircleProgressBar = ({
   const size = 50;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const offset =
-    circumference - (habitCurrentCount / count) * circumference;
+  const offset = circumference - (habitCurrentCount / count) * circumference;
 
   return (
     <button
@@ -25,11 +24,7 @@ export const CircleProgressBar = ({
       onClick={onProgressIncrease}
       disabled={isButtonDisabled}
     >
-      <svg
-        width={size}
-        height={size}
-        className='transform -rotate-90'
-      >
+      <svg width={size} height={size} className='transform -rotate-90'>
         <circle
           cx={size / 2}
           cy={size / 2}

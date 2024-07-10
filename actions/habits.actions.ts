@@ -1,8 +1,8 @@
 'use server';
 
 import { createAdminClient } from '@/appwrite/appwrite';
-import { parseStringify } from '@/lib/utils';
 import {
+  CreateHabitResponse,
   DeleteHabitResponse,
   GetHabitsResponse,
   HabitProps,
@@ -18,25 +18,22 @@ const {
   NEXT_APPWRITE_HABITS_COLLECTION_ID: HABITS_ID,
 } = process.env;
 
-export const createHabit = async (values: HabitProps) => {
+export const createHabit = async (
+  values: HabitProps,
+): Promise<CreateHabitResponse> => {
   try {
     const { database } = await createAdminClient();
 
     const user = await getLoggedInUser();
 
-    const habit = await database.createDocument(
-      DATABASE_ID!,
-      HABITS_ID!,
-      ID.unique(),
-      {
-        userId: user.$id,
-        ...values,
-      },
-    );
+    await database.createDocument(DATABASE_ID!, HABITS_ID!, ID.unique(), {
+      userId: user.$id,
+      ...values,
+    });
     revalidatePath('/');
-    return parseStringify(habit);
+    return { data: 'Habit created successfully!' };
   } catch (error) {
-    return null;
+    return { error: 'Something went wrong, please try again later.' };
   }
 };
 
@@ -73,12 +70,39 @@ export const deleteHabit = async (habitId: string): Promise<DeleteHabitResponse>
       return { error: 'You are not authorized to view this!' };
     }
 
-    await database.deleteDocument(DATABASE_ID!, HABITS_ID!, 'dsadjadsjahdas');
+    await database.deleteDocument(DATABASE_ID!, HABITS_ID!, habitId);
     revalidatePath('/');
     return { data: 'Habit deleted successfully!' };
   } catch (error) {
-    console.log(error);
+    return { error: 'Something went wrong, please try again later.' };
+  }
+};
 
+export const archiveHabit = async (
+  habitId: string,
+  toArchive: boolean,
+): Promise<CreateHabitResponse> => {
+  try {
+    const { database } = await createAdminClient();
+
+    const user = await getLoggedInUser();
+
+    if (!user) {
+      return { error: 'You are not authorized to view this!' };
+    }
+
+    await database.updateDocument(DATABASE_ID!, HABITS_ID!, habitId, {
+      isArchived: toArchive,
+    });
+
+    revalidatePath('/');
+
+    const message = toArchive
+      ? 'Habit archived successfully!'
+      : 'Habit unarchived successfully!';
+
+    return { data: message };
+  } catch (error) {
     return { error: 'Something went wrong, please try again later.' };
   }
 };
@@ -95,10 +119,36 @@ export const getHabits = async (): Promise<GetHabitsResponse> => {
 
     const habits = await database.listDocuments(DATABASE_ID!, HABITS_ID!, [
       Query.equal('userId', user.$id),
+      Query.equal('isArchived', false),
     ]);
 
     if (habits.total === 0) {
       return { error: 'You have no habits. Start by adding one!' };
+    }
+
+    return { data: habits };
+  } catch (error) {
+    return { error: 'Something went wrong, please try again later.' };
+  }
+};
+
+export const getArchivedHabits = async (): Promise<GetHabitsResponse> => {
+  try {
+    const { database } = await createAdminClient();
+
+    const user = await getLoggedInUser();
+
+    if (!user) {
+      return { error: 'You are not authorized to view this!' };
+    }
+
+    const habits = await database.listDocuments(DATABASE_ID!, HABITS_ID!, [
+      Query.equal('userId', user.$id),
+      Query.equal('isArchived', true),
+    ]);
+
+    if (habits.total === 0) {
+      return { error: 'You have no archived habits.' };
     }
 
     return { data: habits };

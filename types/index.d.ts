@@ -96,6 +96,10 @@ declare interface HabitItemProps {
   date: Date | undefined;
 }
 
+declare interface ArchivedHabitItemProps {
+  item: HabitProps;
+}
+
 declare interface GetHabitsResponse {
   data?: Models.DocumentList<Models.Document>;
   error?: string;
@@ -112,6 +116,11 @@ declare interface DeleteHabitResponse {
 }
 
 declare interface UpdateHabitResponse {
+  data?: string;
+  error?: string;
+}
+
+declare interface CreateHabitResponse {
   data?: string;
   error?: string;
 }
